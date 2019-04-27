@@ -1,6 +1,6 @@
 # ngs2-assignment
 
-0. Create workdir
+###0. Create workdir
 ```
 cd ~/workdir
 git clone https://github.com/Ruwaa-Ib/ngs2-assignment.git
@@ -8,10 +8,8 @@ cd ngs2-assignment
 work_dir="$(pwd)"
 ```
 
-1. Dataset downloaded from >> https://uploadfiles.io/kc0qqbvd 
+###1. Dataset downloaded from >> https://uploadfiles.io/kc0qqbvd 
 ```
-cd $work_dir
-
 unzip ngs2-assignment-data.zip
 
 R1="$work_dir/ngs2-assignment-data/SRR8797509_1.part_001.part_001.fastq.gz"
@@ -27,7 +25,7 @@ PU="HiSeqXTen"	# platform unit
 RGID="null"			# Read-Group ID
 ```
 
-2. Download and Index the refrence human genome 
+###2. Download and Index the refrence human genome 
 ```
 # download ref.
 mkdir genome-data && cd genome-data
@@ -53,7 +51,7 @@ java -Xmx2g -jar $picard_path/picard.jar \
   O=$ref_fna.dict
 ```
 
-3. Map the dataset to the indexed genome
+###3. Map the dataset to the indexed genome
 ```
 mkdir hisatmap 
 hisat2 -q --phred33 \
@@ -65,7 +63,7 @@ hisat2 -q --phred33 \
   > hisatmap/map.log
 ```
 
-4. Deduplicate and create index
+###4. Deduplicate and create index
 ```
 mkdir dedup
 
@@ -89,17 +87,17 @@ java -Xmx2g -jar $picard_path/picard.jar \
   M=dedup/output.met
 ```
 
-5. Split'N'Trim
+###5. Split'N'Trim
 ```
 mkdir splitN
 gatk SplitNCigarReads -R $ref_fna -I dedup/$SM.dedup.bam -O splitN/$SM.splitN.bam
 ```
 
-6. Base Recalibration
+###6. Base Recalibration
 
   This part wasn't done becuse the VCF file of the human whole genome is too big to be downloaded and used; plus, its effect is mariginal (according to GATK discussion post).
   
-7. Variant Calling
+###7. Variant Calling
 
   Somethins wrong is going here! IDK why it produces empty vcf file.
 ```
@@ -112,7 +110,7 @@ gatk --java-options "-Xmx2G" HaplotypeCaller \
   -O vc/$SM.vcf
 ```
 
-8. Variant Filtering
+###8. Variant Filtering
 ```
 gatk --java-options "-Xmx2G" VariantFiltration \
   -R $ref_fna -V vc/$SM.vcf \
